@@ -49,7 +49,6 @@ class CharactersScreen extends StatelessWidget {
   Widget _successfulWidget(
       BuildContext context, SuccessfulMainPageState state) {
     return ListView.builder(
-      cacheExtent: double.infinity,
       itemCount: state.characters.length,
       itemBuilder: (context, index) {
         return _characterWidget(context, state.characters[index]);
