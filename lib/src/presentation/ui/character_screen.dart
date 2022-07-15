@@ -1,8 +1,8 @@
 import 'package:casino_test/src/data/models/character.dart';
-import 'package:casino_test/src/data/repository/characters_repository.dart';
 import 'package:casino_test/src/presentation/bloc/main_bloc.dart';
 import 'package:casino_test/src/presentation/bloc/main_event.dart';
 import 'package:casino_test/src/presentation/bloc/main_state.dart';
+import 'package:casino_test/src/presentation/ui/components/error_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -13,10 +13,7 @@ class CharactersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (context) => MainPageBloc(
-          InitialMainPageState(),
-          GetIt.I.get<CharactersRepository>(),
-        )..add(const GetTestDataOnMainPageEvent(1)),
+        create: (context) => GetIt.I<MainPageBloc>(),
         child: BlocConsumer<MainPageBloc, MainPageState>(
           listener: (context, state) {},
           builder: (blocContext, state) {
@@ -25,7 +22,9 @@ class CharactersScreen extends StatelessWidget {
             } else if (state is SuccessfulMainPageState) {
               return _successfulWidget(context, state);
             } else {
-              return Center(child: const Text("error"));
+              return ErrorComponent(onRetry: () {
+                GetIt.I<MainPageBloc>().add(GetTestDataOnMainPageEvent());
+              });
             }
           },
         ),

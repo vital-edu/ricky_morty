@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   final CharactersRepository _charactersRepository;
+  int _page = 1;
 
   MainPageBloc(
     MainPageState initialState,
@@ -37,7 +38,7 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     Emitter<MainPageState> emit,
   ) async {
     emit(LoadingMainPageState());
-    _charactersRepository.getCharacters(event.page).then(
+    _charactersRepository.getCharacters(_page).then(
       (value) {
         add(DataLoadedOnMainPageEvent(value));
       },
