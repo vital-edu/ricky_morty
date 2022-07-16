@@ -1,28 +1,27 @@
 import 'package:casino_test/src/data/models/character.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class MainPageState extends Equatable {}
+abstract class MainPageState extends Equatable {
+  final List<Character> characters;
+
+  const MainPageState(this.characters);
+
+  List<Object> get props => [characters];
+}
 
 class InitialMainPageState extends MainPageState {
-  @override
-  List<Object> get props => [];
+  const InitialMainPageState() : super(const []);
 }
 
 class LoadingMainPageState extends MainPageState {
-  @override
-  List<Object> get props => [];
+  const LoadingMainPageState(List<Character> characters) : super(characters);
 }
 
 class UnSuccessfulMainPageState extends MainPageState {
-  @override
-  List<Object> get props => [];
+  const UnSuccessfulMainPageState(List<Character> characters)
+      : super(characters);
 }
 
 class SuccessfulMainPageState extends MainPageState {
-  final List<Character> characters;
-
-  SuccessfulMainPageState(this.characters);
-
-  @override
-  List<Object> get props => [characters];
+  const SuccessfulMainPageState(List<Character> characters) : super(characters);
 }

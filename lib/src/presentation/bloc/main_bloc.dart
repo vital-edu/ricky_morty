@@ -18,7 +18,10 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
       (event, emitter) => _dataLoadedOnMainPageCasino(event, emitter),
     );
     on<LoadingDataOnMainPageEvent>(
-      (event, emitter) => emitter(LoadingMainPageState()),
+      (event, emitter) => emitter(LoadingMainPageState(event.characters)),
+    );
+    on<ErrorDataOnMainPageEvent>(
+      (event, emitter) => emitter(UnSuccessfulMainPageState(event.characters)),
     );
   }
 
@@ -26,21 +29,29 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     DataLoadedOnMainPageEvent event,
     Emitter<MainPageState> emit,
   ) async {
-    if (event.characters != null) {
-      emit(SuccessfulMainPageState(event.characters!));
-    } else {
-      emit(UnSuccessfulMainPageState());
-    }
+    final newCharacters = event.characters;
+    _page += 1;
+    emit(SuccessfulMainPageState(event.characters));
   }
 
   Future<void> _getDataOnMainPageCasino(
     GetTestDataOnMainPageEvent event,
     Emitter<MainPageState> emit,
   ) async {
-    emit(LoadingMainPageState());
+    emit(LoadingMainPageState(event.characters));
     _charactersRepository.getCharacters(_page).then(
       (value) {
-        add(DataLoadedOnMainPageEvent(value));
+        value.fold((failure) {
+          add(ErrorDataOnMainPageEvent(event.characters, failure));
+          return null;
+        }, (newCharacters) {
+          add(
+            DataLoadedOnMainPageEvent(
+              [...event.characters, ...newCharacters],
+            ),
+          );
+          return null;
+        });
       },
     );
   }

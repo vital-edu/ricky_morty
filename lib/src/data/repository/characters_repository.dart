@@ -1,5 +1,7 @@
 import 'package:casino_test/src/data/models/character.dart';
+import 'package:casino_test/src/data/models/failure.dart';
+import 'package:dartz/dartz.dart';
 
 abstract class CharactersRepository {
-  Future<List<Character>?> getCharacters(int page);
+  Future<Either<Failure, List<Character>>> getCharacters(int page);
 }
