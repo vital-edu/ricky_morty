@@ -14,44 +14,42 @@ class CharacterComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
+    return Container(
       decoration: ShapeDecoration(
         color: Color.fromARGB(120, 204, 255, 255),
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(32),
         ),
       ),
-      child: ListTile(
-        contentPadding: EdgeInsets.all(8),
-        leading: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          backgroundImage: CachedNetworkImageProvider(
-            character.image,
-            maxWidth: 50,
-            maxHeight: 50,
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.transparent,
+            backgroundImage: CachedNetworkImageProvider(
+              character.image,
+            ),
+            radius: 36,
           ),
-        ),
-        title: Text(character.name),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(character.species),
-            Text(
-              character.origin.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+          SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(character.name,
+                    style: Theme.of(context).textTheme.headline6),
+                Text('Gender: ${character.gender}'),
+                Text('Species: ${character.species}'),
+                Text(
+                  'Origin: ${character.origin.name}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
-          ],
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Text(character.gender),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
