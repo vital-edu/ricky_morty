@@ -36,7 +36,7 @@ class CharactersScreen extends StatelessWidget {
                     final character = state.characters.safe(index);
 
                     if (character == null) {
-                      return _loadingWidget(context);
+                      return _LoadingWidget(context: context);
                     }
 
                     return _CharacterWidget(
@@ -89,8 +89,18 @@ class CharactersScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _loadingWidget(BuildContext context) {
+class _LoadingWidget extends StatelessWidget {
+  const _LoadingWidget({
+    Key? key,
+    required this.context,
+  }) : super(key: key);
+
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Container(
         width: 50,
