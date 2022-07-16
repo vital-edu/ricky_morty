@@ -6,16 +6,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   final CharactersRepository _charactersRepository;
   int _page = 1;
+  int? _maxPage;
 
   MainPageBloc(
     MainPageState initialState,
     this._charactersRepository,
   ) : super(initialState) {
     on<GetTestDataOnMainPageEvent>(
-      (event, emitter) => _getDataOnMainPageCasino(event, emitter),
+      (event, emitter) async => await _getDataOnMainPageCasino(event, emitter),
     );
     on<DataLoadedOnMainPageEvent>(
-      (event, emitter) => _dataLoadedOnMainPageCasino(event, emitter),
+      (event, emitter) async =>
+          await _dataLoadedOnMainPageCasino(event, emitter),
     );
     on<LoadingDataOnMainPageEvent>(
       (event, emitter) => emitter(LoadingMainPageState(event.characters)),
@@ -29,29 +31,48 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     DataLoadedOnMainPageEvent event,
     Emitter<MainPageState> emit,
   ) async {
-    final newCharacters = event.characters;
-    _page += 1;
-    emit(SuccessfulMainPageState(event.characters));
+    _page = event.page + 1;
+    _maxPage = event.maxPage;
+    emit(SuccessfulMainPageState(
+      event.characters,
+    ));
   }
 
   Future<void> _getDataOnMainPageCasino(
     GetTestDataOnMainPageEvent event,
     Emitter<MainPageState> emit,
   ) async {
+    if (_maxPage != null && _page >= _maxPage!) {
+      return;
+    }
+
     emit(LoadingMainPageState(event.characters));
-    _charactersRepository.getCharacters(_page).then(
-      (value) {
-        value.fold((failure) {
-          add(ErrorDataOnMainPageEvent(event.characters, failure));
-          return null;
-        }, (newCharacters) {
-          add(
-            DataLoadedOnMainPageEvent(
-              [...event.characters, ...newCharacters],
-            ),
-          );
-          return null;
-        });
+
+    final result = await _charactersRepository.getCharacters(_page);
+    result.fold(
+      (failure) {
+        failure.map(
+          api: (_) => add(ErrorDataOnMainPageEvent(event.characters)),
+          unknown: (_) => add(ErrorDataOnMainPageEvent(event.characters)),
+          noMorePagesAvailable: (_) {
+            _maxPage = _page;
+            add(DataLoadedOnMainPageEvent(
+              event.characters,
+              page: _page,
+              maxPage: _maxPage,
+            ));
+          },
+        );
+      },
+      (newCharacters) {
+        add(
+          DataLoadedOnMainPageEvent(
+            [...event.characters, ...newCharacters],
+            page: _page,
+            maxPage: null,
+          ),
+        );
+        return null;
       },
     );
   }

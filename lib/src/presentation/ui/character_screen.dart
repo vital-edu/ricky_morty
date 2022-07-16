@@ -48,11 +48,7 @@ class CharactersScreen extends StatelessWidget {
                   } else if (state is SuccessfulMainPageState) {
                     return CharacterComponent(
                       context: context,
-                      character: state.characters.safe(index) ??
-                          Character(
-                            'Unknown',
-                            'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-                          ),
+                      character: state.characters[index],
                     );
                   } else {
                     final character = state.characters.safe(index);

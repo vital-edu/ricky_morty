@@ -15,35 +15,40 @@ class CharactersRepositoryImpl implements CharactersRepository {
   CharactersRepositoryImpl(this.client);
 
   @override
-  Future<Either<Failure, List<Character>>> getCharacters(int page) async {
+  Future<Either<RepoFailure, List<Character>>> getCharacters(int page) async {
     final bool showMockedError = Random().nextBool();
     devtools.log("showMockedError = $showMockedError");
 
     if (showMockedError) {
       return Future.delayed(
         const Duration(seconds: 5),
-        () => left(Failure('Unknown error')),
+        () => left(RepoFailure.api(null)),
       );
     }
 
     var client = Client();
     final uri =
         Uri.parse("https://rickandmortyapi.com/api/character/?page=$page");
-    final charResult = await client.get(uri);
-    final jsonMap = await json.decode(charResult.body) as Map<String, dynamic>;
-    final List<dynamic>? results = jsonMap['results'];
 
-    if (results == null) {
-      final String? error = jsonMap['error'];
-      return left(Failure(error ?? 'Unknown error'));
-    }
+    try {
+      final response = await client.get(uri);
 
-    return right(
-      List.of(
-        results.map(
-          (value) => Character.fromJson(value),
+      final jsonMap = json.decode(response.body) as Map<String, dynamic>;
+      final List<dynamic>? results = jsonMap['results'];
+
+      if (results == null) {
+        return left(RepoFailure.noMorePagesAvailable());
+      }
+
+      return right(
+        List.of(
+          results.map(
+            (value) => Character.fromJson(value),
+          ),
         ),
-      ),
-    );
+      );
+    } catch (error) {
+      return left(RepoFailure.unknown(error.toString()));
+    }
   }
 }

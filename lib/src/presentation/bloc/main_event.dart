@@ -22,13 +22,17 @@ class LoadingDataOnMainPageEvent extends MainPageEvent {
 }
 
 class ErrorDataOnMainPageEvent extends MainPageEvent {
-  final Failure failure;
-
-  const ErrorDataOnMainPageEvent(List<Character> characters, this.failure)
+  const ErrorDataOnMainPageEvent(List<Character> characters)
       : super(characters);
 }
 
 class DataLoadedOnMainPageEvent extends MainPageEvent {
-  const DataLoadedOnMainPageEvent(List<Character> characters)
-      : super(characters);
+  final int page;
+  final int? maxPage;
+
+  const DataLoadedOnMainPageEvent(
+    List<Character> characters, {
+    required this.page,
+    required this.maxPage,
+  }) : super(characters);
 }
