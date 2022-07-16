@@ -7,6 +7,7 @@ import 'package:casino_test/src/data/models/failure.dart';
 import 'package:casino_test/src/data/repository/characters_repository.dart';
 import 'package:http/http.dart';
 import 'package:dartz/dartz.dart';
+import 'dart:developer' as devtools show log;
 
 class CharactersRepositoryImpl implements CharactersRepository {
   final Client client;
@@ -16,7 +17,7 @@ class CharactersRepositoryImpl implements CharactersRepository {
   @override
   Future<Either<Failure, List<Character>>> getCharacters(int page) async {
     final bool showMockedError = Random().nextBool();
-    print("casino test log: showMockedError = $showMockedError");
+    devtools.log("showMockedError = $showMockedError");
 
     if (showMockedError) {
       return Future.delayed(
