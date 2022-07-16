@@ -7,23 +7,26 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   final CharactersRepository _charactersRepository;
   int _page = 1;
   int? _maxPage;
+  String? _characterName;
 
   MainPageBloc(
     MainPageState initialState,
     this._charactersRepository,
   ) : super(initialState) {
     on<GetTestDataOnMainPageEvent>(
-      (event, emitter) async => await _getDataOnMainPageCasino(event, emitter),
+      (event, emitter) => _getDataOnMainPageCasino(event, emitter),
     );
     on<DataLoadedOnMainPageEvent>(
-      (event, emitter) async =>
-          await _dataLoadedOnMainPageCasino(event, emitter),
+      (event, emitter) => _dataLoadedOnMainPageCasino(event, emitter),
     );
     on<LoadingDataOnMainPageEvent>(
       (event, emitter) => emitter(LoadingMainPageState(event.characters)),
     );
     on<ErrorDataOnMainPageEvent>(
       (event, emitter) => emitter(UnSuccessfulMainPageState(event.characters)),
+    );
+    on<SearchCharacterOnMainPageEvent>(
+      (event, emitter) => _getSearchedDataOnMainPageCasino(event, emitter),
     );
   }
 
@@ -48,7 +51,10 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
 
     emit(LoadingMainPageState(event.characters));
 
-    final result = await _charactersRepository.getCharacters(_page);
+    final result = await _charactersRepository.getCharacters(
+      _page,
+      name: _characterName,
+    );
     result.fold(
       (failure) {
         failure.map(
@@ -75,5 +81,16 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
         return null;
       },
     );
+  }
+
+  Future<void> _getSearchedDataOnMainPageCasino(
+    SearchCharacterOnMainPageEvent event,
+    Emitter<MainPageState> emit,
+  ) async {
+    _page = 1;
+    _maxPage = null;
+    _characterName = event.characterName;
+
+    add(GetTestDataOnMainPageEvent(const []));
   }
 }

@@ -15,20 +15,23 @@ class CharactersRepositoryImpl implements CharactersRepository {
   CharactersRepositoryImpl(this.client);
 
   @override
-  Future<Either<RepoFailure, List<Character>>> getCharacters(int page) async {
+  Future<Either<RepoFailure, List<Character>>> getCharacters(int page,
+      {String? name}) async {
     final bool showMockedError = Random().nextBool();
     devtools.log("showMockedError = $showMockedError");
 
     if (showMockedError) {
       return Future.delayed(
-        const Duration(seconds: 5),
+        const Duration(seconds: 1),
         () => left(RepoFailure.api(null)),
       );
     }
 
     var client = Client();
-    final uri =
-        Uri.parse("https://rickandmortyapi.com/api/character/?page=$page");
+    final uri = Uri.https('rickandmortyapi.com', 'api/character', {
+      'page': page.toString(),
+      if (name != null) 'name': name,
+    });
 
     try {
       final response = await client.get(uri);
