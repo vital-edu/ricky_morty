@@ -15,6 +15,7 @@ class CharactersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Rick and Morty Characters')),
       body: BlocProvider(
         create: (context) => GetIt.I<MainPageBloc>(),
         child: BlocConsumer<MainPageBloc, MainPageState>(
