@@ -2,6 +2,8 @@ import 'package:casino_test/src/data/models/character.dart';
 import 'package:casino_test/src/presentation/bloc/main_bloc.dart';
 import 'package:casino_test/src/presentation/bloc/main_event.dart';
 import 'package:casino_test/src/presentation/bloc/main_state.dart';
+import 'package:casino_test/src/presentation/ui/components/character_component.dart';
+import 'package:casino_test/src/presentation/ui/components/character_loading_component.dart';
 import 'package:casino_test/src/presentation/ui/components/error_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,15 +38,15 @@ class CharactersScreen extends StatelessWidget {
                     final character = state.characters.safe(index);
 
                     if (character == null) {
-                      return _LoadingWidget(context: context);
+                      return CharacterLoadingComponent(context: context);
                     }
 
-                    return _CharacterWidget(
+                    return CharacterComponent(
                       context: context,
                       character: character,
                     );
                   } else if (state is SuccessfulMainPageState) {
-                    return _CharacterWidget(
+                    return CharacterComponent(
                       context: context,
                       character: state.characters.safe(index) ??
                           Character(
@@ -62,7 +64,7 @@ class CharactersScreen extends StatelessWidget {
                         },
                       );
                     }
-                    return _CharacterWidget(
+                    return CharacterComponent(
                       context: context,
                       character: character,
                     );
@@ -87,113 +89,6 @@ class CharactersScreen extends StatelessWidget {
           },
         ),
       ),
-    );
-  }
-}
-
-class _LoadingWidget extends StatelessWidget {
-  const _LoadingWidget({
-    Key? key,
-    required this.context,
-  }) : super(key: key);
-
-  final BuildContext context;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 50,
-        height: 50,
-        margin: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(12)),
-        ),
-        child: const CircularProgressIndicator(),
-      ),
-    );
-  }
-}
-
-class _CharacterWidget extends StatelessWidget {
-  const _CharacterWidget({
-    Key? key,
-    required this.context,
-    required this.character,
-  }) : super(key: key);
-
-  final BuildContext context;
-  final Character character;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.topLeft,
-      padding: EdgeInsets.all(8),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        width: double.infinity,
-        decoration: ShapeDecoration(
-          color: Color.fromARGB(120, 204, 255, 255),
-          shape: ContinuousRectangleBorder(
-            borderRadius: BorderRadius.circular(32),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Text(character.name),
-            ),
-            Image.network(
-              character.image,
-              width: 50,
-              height: 50,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SuccessWidget extends StatefulWidget {
-  final SuccessfulMainPageState state;
-
-  _SuccessWidget({Key? key, required this.state}) : super(key: key);
-
-  @override
-  State<_SuccessWidget> createState() => __SuccessWidgetState();
-}
-
-class __SuccessWidgetState extends State<_SuccessWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return NotificationListener<ScrollNotification>(
-      child: ListView.builder(
-        itemCount: widget.state.characters.length,
-        itemBuilder: (context, index) {
-          return _CharacterWidget(
-            context: context,
-            character: widget.state.characters[index],
-          );
-        },
-      ),
-      onNotification: (notification) {
-        final pixels = notification.metrics.pixels;
-        final viewportDimension = notification.metrics.viewportDimension;
-        final maxScrollExtent = notification.metrics.maxScrollExtent;
-
-        final limit = maxScrollExtent - viewportDimension / 3;
-
-        if (pixels >= limit) {
-          context
-              .read<MainPageBloc>()
-              .add(GetTestDataOnMainPageEvent(widget.state.characters));
-        }
-        return false;
-      },
     );
   }
 }
