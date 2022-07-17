@@ -13,7 +13,14 @@ import 'package:casino_test/src/extensions/iterable_extensions.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 @immutable
-class CharactersScreen extends StatelessWidget {
+class CharactersScreen extends StatefulWidget {
+  @override
+  State<CharactersScreen> createState() => _CharactersScreenState();
+}
+
+class _CharactersScreenState extends State<CharactersScreen> {
+  bool _canLoadNextPage = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +28,18 @@ class CharactersScreen extends StatelessWidget {
         create: (context) => GetIt.I<MainPageBloc>(),
         child: SearchBar(
           body: BlocConsumer<MainPageBloc, MainPageState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is UnSuccessfulMainPageState ||
+                  state is SuccessfulMainPageState) {
+                setState(() {
+                  _canLoadNextPage = true;
+                });
+              } else {
+                setState(() {
+                  _canLoadNextPage = false;
+                });
+              }
+            },
             builder: (blocContext, state) {
               final searchBarHeight =
                   FloatingSearchBar.of(blocContext)?.widget.height;
@@ -91,7 +109,10 @@ class CharactersScreen extends StatelessWidget {
 
                   final limit = maxScrollExtent - viewportDimension / 3;
 
-                  if (pixels >= limit) {
+                  if (_canLoadNextPage && pixels >= limit) {
+                    setState(() {
+                      _canLoadNextPage = false;
+                    });
                     GetIt.I<MainPageBloc>()
                         .add(GetTestDataOnMainPageEvent(state.characters));
                   }
