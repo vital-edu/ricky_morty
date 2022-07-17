@@ -17,7 +17,7 @@ class MainDIModule {
       final repository = getIt.get<CharactersRepository>();
 
       return MainPageBloc(MainPageState.initial([]), repository)
-        ..add(GetTestDataOnMainPageEvent([]));
+        ..add(GetDataOnMainPageEvent([]));
     });
   }
 }

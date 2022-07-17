@@ -1,54 +1,33 @@
 import 'package:casino_test/src/data/models/character.dart';
 import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class MainPageEvent extends Equatable {
-  final List<Character> characters;
+part 'main_event.freezed.dart';
 
-  const MainPageEvent(this.characters);
+@freezed
+class MainPageEvent with _$MainPageEvent {
+  const MainPageEvent._();
 
-  @override
-  List<Object?> get props => [characters];
-}
+  const factory MainPageEvent.getData(
+    List<Character> characters,
+  ) = GetDataOnMainPageEvent;
 
-class GetTestDataOnMainPageEvent extends MainPageEvent {
-  const GetTestDataOnMainPageEvent(List<Character> characters)
-      : super(characters);
+  const factory MainPageEvent.searchCharacter(
+    String? characterName, {
+    @Default([]) List<Character> characters,
+  }) = SearchCharacterOnMainPageEvent;
 
-  @override
-  List<Object?> get props => [characters];
-}
+  const factory MainPageEvent.loadingData(
+    List<Character> characters,
+  ) = LoadingDataOnMainPageEvent;
 
-class LoadingDataOnMainPageEvent extends MainPageEvent {
-  const LoadingDataOnMainPageEvent(List<Character> characters)
-      : super(characters);
-}
+  const factory MainPageEvent.errorData(
+    List<Character> characters,
+  ) = ErrorDataOnMainPageEvent;
 
-class ErrorDataOnMainPageEvent extends MainPageEvent {
-  const ErrorDataOnMainPageEvent(List<Character> characters)
-      : super(characters);
-}
-
-class DataLoadedOnMainPageEvent extends MainPageEvent {
-  final int page;
-  final int? maxPage;
-
-  const DataLoadedOnMainPageEvent(
+  const factory MainPageEvent.loadedData(
     List<Character> characters, {
-    required this.page,
-    required this.maxPage,
-  }) : super(characters);
-
-  @override
-  List<Object?> get props => [characters, page, maxPage];
-}
-
-class SearchCharacterOnMainPageEvent extends MainPageEvent {
-  final String? characterName;
-
-  const SearchCharacterOnMainPageEvent(
-    this.characterName,
-  ) : super(const []);
-
-  @override
-  List<Object?> get props => [characters, characterName];
+    required int page,
+    int? maxPage,
+  }) = LoadedDataOnMainPageEvent;
 }

@@ -37,7 +37,7 @@ class _CharacterListViewState extends State<CharacterListView> {
         if (pixels >= limit) {
           context
               .read<MainPageBloc>()
-              .add(GetTestDataOnMainPageEvent(widget.state.characters));
+              .add(GetDataOnMainPageEvent(widget.state.characters));
         }
         return false;
       },

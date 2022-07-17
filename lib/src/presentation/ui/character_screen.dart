@@ -80,7 +80,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                           return ErrorComponent(
                             onRetry: () {
                               GetIt.I<MainPageBloc>().add(
-                                  GetTestDataOnMainPageEvent(state.characters));
+                                  GetDataOnMainPageEvent(state.characters));
                             },
                           );
                         }
@@ -108,7 +108,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                   if (_canLoadNextPage && pixels >= limit) {
                     setState(() => _canLoadNextPage = false);
                     GetIt.I<MainPageBloc>()
-                        .add(GetTestDataOnMainPageEvent(state.characters));
+                        .add(GetDataOnMainPageEvent(state.characters));
                   }
                   return false;
                 },

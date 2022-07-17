@@ -13,10 +13,10 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     MainPageState initialState,
     this._charactersRepository,
   ) : super(initialState) {
-    on<GetTestDataOnMainPageEvent>(
+    on<GetDataOnMainPageEvent>(
       (event, emitter) => _getDataOnMainPageCasino(event, emitter),
     );
-    on<DataLoadedOnMainPageEvent>(
+    on<LoadedDataOnMainPageEvent>(
       (event, emitter) => _dataLoadedOnMainPageCasino(event, emitter),
     );
     on<LoadingDataOnMainPageEvent>(
@@ -31,7 +31,7 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   }
 
   Future<void> _dataLoadedOnMainPageCasino(
-    DataLoadedOnMainPageEvent event,
+    LoadedDataOnMainPageEvent event,
     Emitter<MainPageState> emit,
   ) async {
     _page = event.page + 1;
@@ -42,7 +42,7 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   }
 
   Future<void> _getDataOnMainPageCasino(
-    GetTestDataOnMainPageEvent event,
+    GetDataOnMainPageEvent event,
     Emitter<MainPageState> emit,
   ) async {
     if (_maxPage != null && _page >= _maxPage!) {
@@ -62,7 +62,7 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
           unknown: (_) => add(ErrorDataOnMainPageEvent(event.characters)),
           noMorePagesAvailable: (_) {
             _maxPage = _page;
-            add(DataLoadedOnMainPageEvent(
+            add(LoadedDataOnMainPageEvent(
               event.characters,
               page: _page,
               maxPage: _maxPage,
@@ -72,7 +72,7 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
       },
       (newCharacters) {
         add(
-          DataLoadedOnMainPageEvent(
+          LoadedDataOnMainPageEvent(
             [...event.characters, ...newCharacters],
             page: _page,
             maxPage: null,
@@ -91,6 +91,6 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     _maxPage = null;
     _characterName = event.characterName;
 
-    add(GetTestDataOnMainPageEvent(const []));
+    add(GetDataOnMainPageEvent(const []));
   }
 }
