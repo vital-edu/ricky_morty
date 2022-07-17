@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:casino_test/src/data/models/character.dart';
 import 'package:casino_test/src/data/models/failure.dart';
 import 'package:casino_test/src/data/repository/characters_repository.dart';
+import 'package:casino_test/src/extensions/object_extensions.dart';
 import 'package:http/http.dart';
 import 'package:dartz/dartz.dart';
 import 'dart:developer' as devtools show log;
@@ -32,6 +33,11 @@ class CharactersRepositoryImpl implements CharactersRepository {
       'page': page.toString(),
       if (name != null) 'name': name,
     });
+
+    assert(() {
+      uri.log();
+      return true;
+    }());
 
     try {
       final response = await client.get(uri);
