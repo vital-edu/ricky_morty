@@ -4,6 +4,7 @@ import 'package:casino_test/src/presentation/bloc/main_state.dart';
 import 'package:casino_test/src/presentation/ui/components/character_component.dart';
 import 'package:casino_test/src/presentation/ui/components/character_loading_component.dart';
 import 'package:casino_test/src/presentation/ui/components/error_component.dart';
+import 'package:casino_test/src/presentation/ui/components/no_characters_component.dart';
 import 'package:casino_test/src/presentation/ui/components/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,6 +44,12 @@ class CharactersScreen extends StatelessWidget {
                     }
                   })(),
                   itemBuilder: (context, index) {
+                    if (state.characters.isEmpty) {
+                      return NoCharactersComponent(
+                        message: 'No character was found',
+                      );
+                    }
+
                     if (state is LoadingMainPageState) {
                       final character = state.characters.safe(index);
 
