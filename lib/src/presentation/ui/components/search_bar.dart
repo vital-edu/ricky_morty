@@ -21,9 +21,12 @@ class SearchBar extends StatefulWidget {
 class _SearchBarState extends State<SearchBar> {
   late FloatingSearchBarController _controller;
 
+  late String title;
+
   @override
   void initState() {
     super.initState();
+    title = widget.title;
     _controller = FloatingSearchBarController();
   }
 
@@ -35,8 +38,14 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    void pushPageAndAddToHistory(String searchedTerm) {
-      widget.onShouldNavigateToResultPage(searchedTerm);
+    void submitSearch(String searchedTerm) {
+      final term = searchedTerm.trim();
+
+      Future.microtask(
+        () => setState(() => title = term.isEmpty ? widget.title : term),
+      );
+
+      widget.onShouldNavigateToResultPage(term);
       _controller.close();
     }
 
@@ -56,7 +65,7 @@ class _SearchBarState extends State<SearchBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            widget.title,
+            title,
             style: Theme.of(context).textTheme.headline6,
           ),
           Text(
@@ -71,8 +80,13 @@ class _SearchBarState extends State<SearchBar> {
         FloatingSearchBarAction.searchToClear(
           showIfClosed: false,
         ),
+        FloatingSearchBarAction.icon(
+          icon: Icon(Icons.restore),
+          onTap: () => submitSearch(''),
+        ),
       ],
-      onSubmitted: pushPageAndAddToHistory,
+      autocorrect: false,
+      onSubmitted: submitSearch,
     );
   }
 }

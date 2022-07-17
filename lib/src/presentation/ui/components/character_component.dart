@@ -16,7 +16,6 @@ class CharacterComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: ShapeDecoration(
-        color: Color.fromARGB(120, 204, 255, 255),
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(32),
         ),

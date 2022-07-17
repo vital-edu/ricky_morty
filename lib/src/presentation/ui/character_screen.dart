@@ -1,4 +1,3 @@
-import 'package:casino_test/src/data/models/character.dart';
 import 'package:casino_test/src/presentation/bloc/main_bloc.dart';
 import 'package:casino_test/src/presentation/bloc/main_event.dart';
 import 'package:casino_test/src/presentation/bloc/main_state.dart';
