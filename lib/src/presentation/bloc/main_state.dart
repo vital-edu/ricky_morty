@@ -1,27 +1,25 @@
 import 'package:casino_test/src/data/models/character.dart';
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-abstract class MainPageState extends Equatable {
-  final List<Character> characters;
+part 'main_state.freezed.dart';
 
-  const MainPageState(this.characters);
+@freezed
+class MainPageState with _$MainPageState {
+  const MainPageState._();
 
-  List<Object> get props => [characters];
-}
+  const factory MainPageState.initial(
+    List<Character> characters,
+  ) = InitialMainPageState;
 
-class InitialMainPageState extends MainPageState {
-  const InitialMainPageState() : super(const []);
-}
+  const factory MainPageState.loading(
+    List<Character> characters,
+  ) = LoadingMainPageState;
 
-class LoadingMainPageState extends MainPageState {
-  const LoadingMainPageState(List<Character> characters) : super(characters);
-}
+  const factory MainPageState.failure(
+    List<Character> characters,
+  ) = FailureMainPageState;
 
-class UnSuccessfulMainPageState extends MainPageState {
-  const UnSuccessfulMainPageState(List<Character> characters)
-      : super(characters);
-}
-
-class SuccessfulMainPageState extends MainPageState {
-  const SuccessfulMainPageState(List<Character> characters) : super(characters);
+  const factory MainPageState.success(
+    List<Character> characters,
+  ) = SuccessMainPageState;
 }

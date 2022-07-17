@@ -23,7 +23,7 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
       (event, emitter) => emitter(LoadingMainPageState(event.characters)),
     );
     on<ErrorDataOnMainPageEvent>(
-      (event, emitter) => emitter(UnSuccessfulMainPageState(event.characters)),
+      (event, emitter) => emitter(FailureMainPageState(event.characters)),
     );
     on<SearchCharacterOnMainPageEvent>(
       (event, emitter) => _getSearchedDataOnMainPageCasino(event, emitter),
@@ -36,7 +36,7 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   ) async {
     _page = event.page + 1;
     _maxPage = event.maxPage;
-    emit(SuccessfulMainPageState(
+    emit(SuccessMainPageState(
       event.characters,
     ));
   }

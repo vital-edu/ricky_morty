@@ -28,18 +28,14 @@ class _CharactersScreenState extends State<CharactersScreen> {
         create: (context) => GetIt.I<MainPageBloc>(),
         child: SearchBar(
           body: BlocConsumer<MainPageBloc, MainPageState>(
-            listener: (context, state) {
-              if (state is UnSuccessfulMainPageState ||
-                  state is SuccessfulMainPageState) {
-                setState(() {
-                  _canLoadNextPage = true;
-                });
-              } else {
-                setState(() {
-                  _canLoadNextPage = false;
-                });
-              }
-            },
+            listener: (context, state) => setState(() {
+              _canLoadNextPage = state.map(
+                initial: (_) => true,
+                loading: (_) => false,
+                failure: (_) => true,
+                success: (_) => true,
+              );
+            }),
             builder: (blocContext, state) {
               final searchBarHeight =
                   FloatingSearchBar.of(blocContext)?.widget.height;
@@ -50,17 +46,12 @@ class _CharactersScreenState extends State<CharactersScreen> {
               return NotificationListener<ScrollNotification>(
                 child: ListView.builder(
                   padding: EdgeInsets.only(top: topMargin),
-                  itemCount: (() {
-                    if (state is SuccessfulMainPageState) {
-                      return state.characters.length;
-                    } else if (state is UnSuccessfulMainPageState) {
-                      return state.characters.length + 1;
-                    } else if (state is LoadingMainPageState) {
-                      return state.characters.length + 1;
-                    } else {
-                      return 0;
-                    }
-                  })(),
+                  itemCount: state.map(
+                    initial: (_) => 0,
+                    success: (_) => _.characters.length,
+                    loading: (_) => _.characters.length + 1,
+                    failure: (_) => _.characters.length + 1,
+                  ),
                   itemBuilder: (context, index) {
                     if (state.characters.isEmpty) {
                       return NoCharactersComponent(
@@ -68,37 +59,42 @@ class _CharactersScreenState extends State<CharactersScreen> {
                       );
                     }
 
-                    if (state is LoadingMainPageState) {
-                      final character = state.characters.safe(index);
+                    return state.map(
+                      initial: (_) => SizedBox(),
+                      loading: (_) {
+                        final character = _.characters.safe(index);
 
-                      if (character == null) {
-                        return CharacterLoadingComponent(context: context);
-                      }
+                        if (character == null) {
+                          return CharacterLoadingComponent(context: context);
+                        }
 
-                      return CharacterComponent(
-                        context: context,
-                        character: character,
-                      );
-                    } else if (state is SuccessfulMainPageState) {
-                      return CharacterComponent(
+                        return CharacterComponent(
+                          context: context,
+                          character: character,
+                        );
+                      },
+                      failure: (_) {
+                        final character = _.characters.safe(index);
+
+                        if (character == null) {
+                          return ErrorComponent(
+                            onRetry: () {
+                              GetIt.I<MainPageBloc>().add(
+                                  GetTestDataOnMainPageEvent(state.characters));
+                            },
+                          );
+                        }
+
+                        return CharacterComponent(
+                          context: context,
+                          character: character,
+                        );
+                      },
+                      success: (_) => CharacterComponent(
                         context: context,
                         character: state.characters[index],
-                      );
-                    } else {
-                      final character = state.characters.safe(index);
-                      if (character == null) {
-                        return ErrorComponent(
-                          onRetry: () {
-                            GetIt.I<MainPageBloc>().add(
-                                GetTestDataOnMainPageEvent(state.characters));
-                          },
-                        );
-                      }
-                      return CharacterComponent(
-                        context: context,
-                        character: character,
-                      );
-                    }
+                      ),
+                    );
                   },
                 ),
                 onNotification: (notification) {
@@ -110,9 +106,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                   final limit = maxScrollExtent - viewportDimension / 3;
 
                   if (_canLoadNextPage && pixels >= limit) {
-                    setState(() {
-                      _canLoadNextPage = false;
-                    });
+                    setState(() => _canLoadNextPage = false);
                     GetIt.I<MainPageBloc>()
                         .add(GetTestDataOnMainPageEvent(state.characters));
                   }

@@ -16,7 +16,7 @@ class MainDIModule {
     getIt.registerLazySingleton(() {
       final repository = getIt.get<CharactersRepository>();
 
-      return MainPageBloc(InitialMainPageState(), repository)
+      return MainPageBloc(MainPageState.initial([]), repository)
         ..add(GetTestDataOnMainPageEvent([]));
     });
   }

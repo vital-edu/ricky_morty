@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CharacterListView extends StatefulWidget {
-  final SuccessfulMainPageState state;
+  final SuccessMainPageState state;
 
   CharacterListView({Key? key, required this.state}) : super(key: key);
 
