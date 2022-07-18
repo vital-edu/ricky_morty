@@ -1,15 +1,15 @@
-import 'package:casino_test/src/presentation/bloc/main_bloc.dart';
-import 'package:casino_test/src/presentation/bloc/main_event.dart';
-import 'package:casino_test/src/presentation/bloc/main_state.dart';
-import 'package:casino_test/src/presentation/ui/components/character_component.dart';
-import 'package:casino_test/src/presentation/ui/components/character_loading_component.dart';
-import 'package:casino_test/src/presentation/ui/components/error_component.dart';
-import 'package:casino_test/src/presentation/ui/components/no_characters_component.dart';
-import 'package:casino_test/src/presentation/ui/components/search_bar.dart';
+import 'package:casino_test/src/core/shared/extensions/iterable_extensions.dart';
+import 'package:casino_test/src/main/application/main_bloc.dart';
+import 'package:casino_test/src/main/application/main_event.dart';
+import 'package:casino_test/src/main/application/main_state.dart';
+import 'package:casino_test/src/main/presentation/character_component.dart';
+import 'package:casino_test/src/core/presentation/loading_component.dart';
+import 'package:casino_test/src/core/presentation/error_component.dart';
+import 'package:casino_test/src/core/presentation/no_results_component.dart';
+import 'package:casino_test/src/core/presentation/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:casino_test/src/extensions/iterable_extensions.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 @immutable
@@ -54,7 +54,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                   ),
                   itemBuilder: (context, index) {
                     if (state.characters.isEmpty) {
-                      return NoCharactersComponent(
+                      return NoResultsComponent(
                         message: 'No character was found',
                       );
                     }
@@ -65,7 +65,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                         final character = _.characters.safe(index);
 
                         if (character == null) {
-                          return CharacterLoadingComponent(context: context);
+                          return LoadingComponent(context: context);
                         }
 
                         return CharacterComponent(

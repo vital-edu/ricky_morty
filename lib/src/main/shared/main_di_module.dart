@@ -1,8 +1,8 @@
-import 'package:casino_test/src/data/repository/characters_repository.dart';
-import 'package:casino_test/src/data/repository/characters_repository_impl.dart';
-import 'package:casino_test/src/presentation/bloc/main_bloc.dart';
-import 'package:casino_test/src/presentation/bloc/main_event.dart';
-import 'package:casino_test/src/presentation/bloc/main_state.dart';
+import 'package:casino_test/src/main/application/main_bloc.dart';
+import 'package:casino_test/src/main/application/main_event.dart';
+import 'package:casino_test/src/main/application/main_state.dart';
+import 'package:casino_test/src/main/infrastructure/characters_repository.dart';
+import 'package:casino_test/src/main/infrastructure/characters_repository_impl.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 

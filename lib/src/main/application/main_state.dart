@@ -1,4 +1,4 @@
-import 'package:casino_test/src/data/models/character.dart';
+import 'package:casino_test/src/main/domain/character.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'main_state.freezed.dart';

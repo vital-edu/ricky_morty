@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:casino_test/src/data/models/character.dart';
+import 'package:casino_test/src/main/domain/character.dart';
 import 'package:flutter/material.dart';
 
 class CharacterComponent extends StatelessWidget {

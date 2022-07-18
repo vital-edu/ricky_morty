@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:casino_test/src/data/models/character.dart';
-import 'package:casino_test/src/data/models/failure.dart';
-import 'package:casino_test/src/data/repository/characters_repository.dart';
-import 'package:casino_test/src/extensions/object_extensions.dart';
+import 'package:casino_test/src/core/shared/extensions/object_extensions.dart';
+import 'package:casino_test/src/main/domain/character.dart';
+import 'package:casino_test/src/main/domain/failure.dart';
+import 'package:casino_test/src/main/infrastructure/characters_repository.dart';
 import 'package:http/http.dart';
 import 'package:dartz/dartz.dart';
 import 'dart:developer' as devtools show log;

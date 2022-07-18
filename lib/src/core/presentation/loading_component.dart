@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CharacterLoadingComponent extends StatelessWidget {
-  const CharacterLoadingComponent({
+class LoadingComponent extends StatelessWidget {
+  const LoadingComponent({
     Key? key,
     required this.context,
   }) : super(key: key);

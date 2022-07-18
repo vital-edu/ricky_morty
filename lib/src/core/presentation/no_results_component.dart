@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class NoCharactersComponent extends StatelessWidget {
+class NoResultsComponent extends StatelessWidget {
   final String message;
 
-  const NoCharactersComponent({
+  const NoResultsComponent({
     Key? key,
     required this.message,
   }) : super(key: key);
