@@ -13,20 +13,15 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     MainPageState initialState,
     this._charactersRepository,
   ) : super(initialState) {
-    on<GetDataOnMainPageEvent>(
-      (event, emitter) => _getDataOnMainPageCasino(event, emitter),
-    );
-    on<LoadedDataOnMainPageEvent>(
-      (event, emitter) => _dataLoadedOnMainPageCasino(event, emitter),
-    );
-    on<LoadingDataOnMainPageEvent>(
-      (event, emitter) => emitter(LoadingMainPageState(event.characters)),
-    );
-    on<ErrorDataOnMainPageEvent>(
-      (event, emitter) => emitter(FailureMainPageState(event.characters)),
-    );
-    on<SearchCharacterOnMainPageEvent>(
-      (event, emitter) => _getSearchedDataOnMainPageCasino(event, emitter),
+    on<MainPageEvent>(
+      (event, emitter) => event.map(
+        getData: (event) => _getDataOnMainPageCasino(event, emitter),
+        searchCharacter: (event) =>
+            _getSearchedDataOnMainPageCasino(event, emitter),
+        loadingData: (event) => emitter(LoadingMainPageState(event.characters)),
+        errorData: (event) => emitter(FailureMainPageState(event.characters)),
+        loadedData: (event) => _dataLoadedOnMainPageCasino(event, emitter),
+      ),
     );
   }
 

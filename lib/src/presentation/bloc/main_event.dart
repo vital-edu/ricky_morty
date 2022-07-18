@@ -1,5 +1,4 @@
 import 'package:casino_test/src/data/models/character.dart';
-import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'main_event.freezed.dart';
